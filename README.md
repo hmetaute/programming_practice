@@ -1,9 +1,9 @@
-#**Welcome to my programming practice!**
+# Welcome to my programming practice!
 
-##Purpose
+## Purpose
 This is a java project intended as a simple exercise to showcase my usage of build tools and the java programming language.
 
-##The problem
+## The problem
 We are going to be working on the task of formatting signed integers as strings in english
 Basically you can pass an integer to the IntFormatter
 and it will return the String representation for your number!
@@ -15,8 +15,8 @@ As simple as that.
 With maven installed just do
 `mvn clean install`
 
-##To run the tests
+## To run the tests
 You can just run `mvn test` on the project
 
-##If you want to create an executable jar
+## If you want to create an executable jar
 you can use maven and run `mvn package` on the main folder
