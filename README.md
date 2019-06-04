@@ -20,3 +20,9 @@ You can just run `mvn test` on the project
 
 ## If you want to create an executable jar
 you can use maven and run `mvn package` on the main folder
+
+## If you want to build and run the cli
+Just run (having installed maven and java 8) `./run.sh`
+
+# Issues?
+run.sh needs execution permissions. You can add that with `chmod +x run.sh`
