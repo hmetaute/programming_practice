@@ -2,6 +2,7 @@ package com.metaute.api.main;
 
 import com.metaute.api.lib.IntFormatter;
 
+import java.nio.charset.StandardCharsets;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,9 +17,9 @@ public class Main {
         System.out.println("In order to stop the program, press CTRL + C.");
         IntFormatter formatter = new IntFormatter();
         while(true) {
-            System.out.println("Enter the number you whish to convert.");
+            System.out.println("Enter the number you wish to convert.");
             try {
-                Scanner input = new Scanner(System.in);
+                Scanner input = new Scanner(System.in, StandardCharsets.UTF_8.name());
                 int intToTransform = input.nextInt();
                 String formattedInt = formatter.format(intToTransform);
                 System.out.println(formattedInt);
