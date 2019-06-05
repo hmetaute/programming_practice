@@ -113,4 +113,54 @@ public class IntFormatterTest {
     public void convertMinusNine() {
         testNumber(-9, "minus nine");
     }
+
+    @Test
+    public void convertTen() {
+        testNumber(10, "ten");
+    }
+
+    @Test
+    public void convertEleven() {
+        testNumber(11, "eleven");
+    }
+
+    @Test
+    public void convertTwelve() {
+        testNumber(12, "twelve");
+    }
+
+    @Test
+    public void convertThirteen() {
+        testNumber(13, "thirteen");
+    }
+
+    @Test
+    public void convertFourteen() {
+        testNumber(14, "fourteen");
+    }
+
+    @Test
+    public void convertFifteen() {
+        testNumber(15, "fifteen");
+    }
+
+    @Test
+    public void convertSixteen() {
+        testNumber(16, "sixteen");
+    }
+
+    @Test
+    public void convertSeventeen() {
+        testNumber(17, "seventeen");
+    }
+
+    @Test
+    public void convertEighteen() {
+        testNumber(18, "eighteen");
+    }
+
+    @Test
+    public void convertNineteen() {
+        testNumber(19, "nineteen");
+    }
 }
