@@ -68,4 +68,49 @@ public class IntFormatterTest {
     public void convertNine() {
         testNumber(9, "nine");
     }
+
+    @Test
+    public void convertsMinusOne() {
+        testNumber(-1, "minus one");
+    }
+
+    @Test
+    public void convertsMinusTwo() {
+        testNumber(-2, "minus two");
+    }
+
+    @Test
+    public void convertsMinusThree() {
+        testNumber(-3, "minus three");
+    }
+
+    @Test
+    public void convertsMinusFour() {
+        testNumber(-4, "minus four");
+    }
+
+    @Test
+    public void convertsMinusFive() {
+        testNumber(-5, "minus five");
+    }
+
+    @Test
+    public void convertsMinusSix() {
+        testNumber(-6, "minus six");
+    }
+
+    @Test
+    public void convertsMinusSeven() {
+        testNumber(-7, "minus seven");
+    }
+
+    @Test
+    public void convertMinusEight() {
+        testNumber(-8, "minus eight");
+    }
+
+    @Test
+    public void convertMinusNine() {
+        testNumber(-9, "minus nine");
+    }
 }

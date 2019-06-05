@@ -30,9 +30,13 @@ public class IntFormatter {
      * @return
      */
     public String format(int toTransform) {
-        String formattedNumber;
+        String formattedNumber = "";
+        if (toTransform < 0) {
+            formattedNumber = "minus ";
+            toTransform = toTransform * -1;
+        }
         if (toTransform < 10) {
-            formattedNumber = this.units.get(toTransform);
+            formattedNumber = formattedNumber + this.units.get(toTransform);
         } else {
             formattedNumber = "???";
         }
