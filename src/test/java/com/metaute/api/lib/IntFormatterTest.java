@@ -28,44 +28,45 @@ public class IntFormatterTest {
                 toTransform, expectedWhenFormatted, transformed), expectedWhenFormatted, transformed);
     }
 
-    @Test
-    public void testDecimalResourceFileLoads() {
+    /**
+     * Runs test cases from the files names passed in
+     * @param resourceFileLocation
+     */
+    private void testCasesFromResourceFile(String resourceFileLocation) {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        URL resourceLocation = classLoader.getResource("test-data/signedDecimals.csv");
+        URL resource = classLoader.getResource(resourceFileLocation);
+        try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()))) {
+            stream.forEach(line -> {
+                String[] split = line.split(",");
+                Integer testNumber = Integer.parseInt(split[0]);
+                String expectedRepresentation = split[1];
+                testNumber(testNumber, expectedRepresentation);
+            });
+        } catch (Exception e) {
+            Assert.fail("Could not open and process test data for file" + resourceFileLocation);
+        }
+    }
+
+    private void testResourceFileLoads(String resourceFileLocation) {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        URL resourceLocation = classLoader.getResource(resourceFileLocation);
         assertNotNull("Didn't find resource file", resourceLocation);
         File file = new File(resourceLocation.getFile());
         assertTrue("Couldn't load resource file", file.exists());
     }
 
     @Test
-    public void testSignedDecimals() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        URL resource = classLoader.getResource("test-data/signedDecimals.csv");
-        try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()))) {
-            stream.forEach(line -> {
-                String[] split = line.split(",");
-                Integer testNumber = Integer.parseInt(split[0]);
-                String expectedRepresentation = split[1];
-                testNumber(testNumber, expectedRepresentation);
-            });
-        } catch (Exception e) {
-            Assert.fail("Could not open and process test data for signed decimals");
-        }
+    public void testSignedTens() {
+        String resourceFileLocation = "test-data/signedTens.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
     }
 
     @Test
-    public void testSignedTens() {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        URL resource = classLoader.getResource("test-data/signedHundreds.csv");
-        try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()))) {
-            stream.forEach(line -> {
-                String[] split = line.split(",");
-                Integer testNumber = Integer.parseInt(split[0]);
-                String expectedRepresentation = split[1];
-                testNumber(testNumber, expectedRepresentation);
-            });
-        } catch (Exception e) {
-            Assert.fail("Could not open and process test data for signed decimals");
-        }
+    public void testSignedDecimals() {
+        String resourceFileLocation = "test-data/signedDecimals.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
     }
+
 }

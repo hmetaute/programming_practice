@@ -44,7 +44,6 @@ public class IntFormatter {
         tens.put(17, "seventeen");
         tens.put(18, "eighteen");
         tens.put(19, "nineteen");
-        tens.put(19, "twenty");
     }
 
     private void initializeRoundTens() {
@@ -73,8 +72,6 @@ public class IntFormatter {
         }
         if (toTransform < 10) {
             formattedNumber = formatUnits(toTransform, signString);
-        } else if (toTransform <= 20){
-            formattedNumber = signString + tens.get(toTransform);
         } else if (toTransform < 100) {
             formattedNumber = formatTens(toTransform, signString);
         } else {
@@ -94,14 +91,14 @@ public class IntFormatter {
     }
 
     /**
-     * Transforms numbers from 10 to 99
+     * Transforms signed numbers from 10 to 99
      * @param tensToTransform
      * @param signString
      * @return
      */
     private String formatTens(int tensToTransform, String signString) {
         String formattedTen;
-        if (tensToTransform <= 20) {
+        if (tensToTransform < 20) {
             formattedTen = signString + tens.get(tensToTransform);
         } else {
             int unit = tensToTransform % 10;
