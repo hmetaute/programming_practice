@@ -52,4 +52,20 @@ public class IntFormatterTest {
             Assert.fail("Could not open and process test data for signed decimals");
         }
     }
+
+    @Test
+    public void testSignedTens() {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        URL resource = classLoader.getResource("test-data/signedHundreds.csv");
+        try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()))) {
+            stream.forEach(line -> {
+                String[] split = line.split(",");
+                Integer testNumber = Integer.parseInt(split[0]);
+                String expectedRepresentation = split[1];
+                testNumber(testNumber, expectedRepresentation);
+            });
+        } catch (Exception e) {
+            Assert.fail("Could not open and process test data for signed decimals");
+        }
+    }
 }
