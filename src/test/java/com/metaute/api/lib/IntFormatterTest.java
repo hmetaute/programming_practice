@@ -1,8 +1,17 @@
 package com.metaute.api.lib;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class IntFormatterTest {
 
@@ -19,148 +28,45 @@ public class IntFormatterTest {
                 toTransform, expectedWhenFormatted, transformed), expectedWhenFormatted, transformed);
     }
 
-    @Test
-    public void convertsZero() {
-        testNumber(0, "zero");
+    /**
+     * Runs test cases from the files names passed in
+     * @param resourceFileLocation
+     */
+    private void testCasesFromResourceFile(String resourceFileLocation) {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        URL resource = classLoader.getResource(resourceFileLocation);
+        try (Stream<String> stream = Files.lines(Paths.get(resource.toURI()))) {
+            stream.forEach(line -> {
+                String[] split = line.split(",");
+                Integer testNumber = Integer.parseInt(split[0]);
+                String expectedRepresentation = split[1];
+                testNumber(testNumber, expectedRepresentation);
+            });
+        } catch (Exception e) {
+            Assert.fail("Could not open and process test data for file" + resourceFileLocation);
+        }
+    }
+
+    private void testResourceFileLoads(String resourceFileLocation) {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        URL resourceLocation = classLoader.getResource(resourceFileLocation);
+        assertNotNull("Didn't find resource file", resourceLocation);
+        File file = new File(resourceLocation.getFile());
+        assertTrue("Couldn't load resource file", file.exists());
     }
 
     @Test
-    public void convertsOne() {
-        testNumber(1, "one");
+    public void testSignedTens() {
+        String resourceFileLocation = "test-data/signedTens.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
     }
 
     @Test
-    public void convertsTwo() {
-        testNumber(2, "two");
+    public void testSignedDecimals() {
+        String resourceFileLocation = "test-data/signedDecimals.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
     }
 
-    @Test
-    public void convertsThree() {
-        testNumber(3, "three");
-    }
-
-    @Test
-    public void convertsFour() {
-        testNumber(4, "four");
-    }
-
-    @Test
-    public void convertsFive() {
-        testNumber(5, "five");
-    }
-
-    @Test
-    public void convertsSix() {
-        testNumber(6, "six");
-    }
-
-    @Test
-    public void convertsSeven() {
-        testNumber(7, "seven");
-    }
-
-    @Test
-    public void convertEight() {
-        testNumber(8, "eight");
-    }
-
-    @Test
-    public void convertNine() {
-        testNumber(9, "nine");
-    }
-
-    @Test
-    public void convertsMinusOne() {
-        testNumber(-1, "minus one");
-    }
-
-    @Test
-    public void convertsMinusTwo() {
-        testNumber(-2, "minus two");
-    }
-
-    @Test
-    public void convertsMinusThree() {
-        testNumber(-3, "minus three");
-    }
-
-    @Test
-    public void convertsMinusFour() {
-        testNumber(-4, "minus four");
-    }
-
-    @Test
-    public void convertsMinusFive() {
-        testNumber(-5, "minus five");
-    }
-
-    @Test
-    public void convertsMinusSix() {
-        testNumber(-6, "minus six");
-    }
-
-    @Test
-    public void convertsMinusSeven() {
-        testNumber(-7, "minus seven");
-    }
-
-    @Test
-    public void convertMinusEight() {
-        testNumber(-8, "minus eight");
-    }
-
-    @Test
-    public void convertMinusNine() {
-        testNumber(-9, "minus nine");
-    }
-
-    @Test
-    public void convertTen() {
-        testNumber(10, "ten");
-    }
-
-    @Test
-    public void convertEleven() {
-        testNumber(11, "eleven");
-    }
-
-    @Test
-    public void convertTwelve() {
-        testNumber(12, "twelve");
-    }
-
-    @Test
-    public void convertThirteen() {
-        testNumber(13, "thirteen");
-    }
-
-    @Test
-    public void convertFourteen() {
-        testNumber(14, "fourteen");
-    }
-
-    @Test
-    public void convertFifteen() {
-        testNumber(15, "fifteen");
-    }
-
-    @Test
-    public void convertSixteen() {
-        testNumber(16, "sixteen");
-    }
-
-    @Test
-    public void convertSeventeen() {
-        testNumber(17, "seventeen");
-    }
-
-    @Test
-    public void convertEighteen() {
-        testNumber(18, "eighteen");
-    }
-
-    @Test
-    public void convertNineteen() {
-        testNumber(19, "nineteen");
-    }
 }
