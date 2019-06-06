@@ -12,6 +12,8 @@ import java.util.Scanner;
  */
 public class Main {
 
+
+
     public static void main(String[] args) {
         System.out.println("Welcome to the integer formatter! You can convert Integers to Strings in english");
         System.out.println("In order to stop the program, press CTRL + C.");

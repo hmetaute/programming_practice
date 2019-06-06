@@ -69,4 +69,11 @@ public class IntFormatterTest {
         testCasesFromResourceFile(resourceFileLocation);
     }
 
+    @Test
+    public void testSignedHundreds() {
+        String resourceFileLocation = "test-data/signedHundreds.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
+    }
+
 }
