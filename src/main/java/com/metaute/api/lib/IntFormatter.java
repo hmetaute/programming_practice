@@ -129,15 +129,14 @@ public class IntFormatter {
             int decimals = hundredsToTransform % 100;
             int hundreds = (hundredsToTransform - decimals) / 100;
             //We need to account for the case of round numbers. We get "one hundred and zero".
-            String formattedDecimals = !formatTens(decimals).equals(units.get(0)) ?
-                    concatPhrase + formatTens(decimals) : "";
+            String formattedDecimals = decimals == 0 ? "" : concatPhrase + formatTens(decimals)  ;
             formattedHundred = formatTens(hundreds) + " " + magnitudes.get(100) + formattedDecimals;
         }
         return formattedHundred;
     }
 
     /**
-     * Method capable of transforming numbers up to a million
+     * Method capable of transforming numbers up to a 999.999
      * @param thousandsToTransform
      * @return
      */
