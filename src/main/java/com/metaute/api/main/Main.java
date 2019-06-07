@@ -4,6 +4,7 @@ import com.metaute.api.lib.IntFormatter;
 
 import java.nio.charset.StandardCharsets;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**

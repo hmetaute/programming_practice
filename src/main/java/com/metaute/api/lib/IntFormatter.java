@@ -117,7 +117,7 @@ public class IntFormatter {
     /**
      * This method is capable of formatting numbers up to 999
      * @param hundredsToTransform
-     * @param finalDigits I plan to use this method for hundreds of thousands, case in which we don't append "and"
+     * @param finalDigits Signals whether or not this method is called for the last three numbers of the int
      * @return formatted signed number
      */
     private String formatHundreds(int hundredsToTransform, boolean finalDigits) {
@@ -148,8 +148,14 @@ public class IntFormatter {
         } else {
             int hundreds = thousandsToTransform % 1000;
             int thousands = (thousandsToTransform - hundreds) / 1000;
-            String formattedHundreds = formatHundreds(hundreds, true);
-            formattedHundreds = !formattedHundreds.equals(units.get(0)) ? " " + formattedHundreds : "";
+            String formattedHundreds;
+            if (hundreds == 0) {
+                formattedHundreds = ""; //stop processing if round thousand
+            } else {
+                //Adds " and " when you have thousands, zeros and tens. E.g. 13.001, 450.025, 950.090
+                String hundredsSeparator = hundreds < 100 ? " and " : " ";
+                formattedHundreds = hundredsSeparator + formatHundreds(hundreds, true);
+            }
             formattedThousands = formatHundreds(thousands, false)
                     + " " + magnitudes.get(1000) + formattedHundreds;
         }

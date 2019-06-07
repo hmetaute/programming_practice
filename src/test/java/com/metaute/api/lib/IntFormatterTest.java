@@ -1,6 +1,7 @@
 package com.metaute.api.lib;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -81,6 +82,11 @@ public class IntFormatterTest {
         String resourceFileLocation = "test-data/signedThousands.csv";
         testResourceFileLoads(resourceFileLocation);
         testCasesFromResourceFile(resourceFileLocation);
+    }
+
+    @Test
+    public void testNumber() {
+        testNumber(824042,"Eight hundred twenty four thousand and forty two");
     }
 
 }
