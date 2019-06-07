@@ -85,8 +85,15 @@ public class IntFormatterTest {
     }
 
     @Test
+    public void testSignedMillions() {
+        String resourceFileLocation = "test-data/signedMillions.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
+    }
+
+    @Test
     public void testNumber() {
-        testNumber(824042,"Eight hundred twenty four thousand and forty two");
+        testNumber(-900000001,"Minus nine hundred million and one");
     }
 
 }

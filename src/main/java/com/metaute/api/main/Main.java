@@ -23,6 +23,13 @@ public class Main {
         while(true) {
             System.out.println("Enter the number you wish to convert.");
             try {
+                int max = 999999999;
+                int min = 999999;
+                for(int i = 0; i < 100; i++) {
+                    Random random = new Random();
+                    int number = random.nextInt(max + 1 -min) + min;
+                    System.out.println(number);
+                }
                 Scanner input = new Scanner(System.in, StandardCharsets.UTF_8.name());
                 int intToTransform = input.nextInt();
                 String formattedInt = formatter.format(intToTransform);

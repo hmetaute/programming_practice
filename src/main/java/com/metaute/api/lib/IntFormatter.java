@@ -75,8 +75,8 @@ public class IntFormatter {
             signString = "minus ";
             toTransform = toTransform * -1;
         }
-        if (toTransform < 1000000){
-            formattedNumber = formatThousands(toTransform);
+        if (toTransform < 1000000000) {
+            formattedNumber = formatMillions(toTransform);
         } else {
             formattedNumber = "???";
         }
@@ -101,17 +101,17 @@ public class IntFormatter {
      * @return
      */
     private String formatTens(int tensToTransform) {
-        String formattedTen;
+        String formattedNumber;
         if (tensToTransform < 20) {
-            formattedTen = units.get(tensToTransform);
+            formattedNumber = units.get(tensToTransform);
         } else {
             int unit = tensToTransform % 10;
             int tens = tensToTransform - unit;
             String tensString = roundTens.get(tens);
             String unitString = unit != 0 ? " " + units.get(unit) : "";
-            formattedTen = tensString + unitString;
+            formattedNumber = tensString + unitString;
         }
-        return formattedTen;
+        return formattedNumber;
     }
 
     /**
@@ -121,18 +121,18 @@ public class IntFormatter {
      * @return formatted signed number
      */
     private String formatHundreds(int hundredsToTransform, boolean finalDigits) {
-        String formattedHundred;
+        String formattedNumber;
         if (hundredsToTransform < 100) {
-            formattedHundred = formatTens(hundredsToTransform);
+            formattedNumber = finalDigits ? "and " + formatTens(hundredsToTransform) : formatTens(hundredsToTransform);
         } else {
             String concatPhrase = finalDigits ? " and " : " ";
             int decimals = hundredsToTransform % 100;
             int hundreds = (hundredsToTransform - decimals) / 100;
             //We need to account for the case of round numbers. We get "one hundred and zero".
             String formattedDecimals = decimals == 0 ? "" : concatPhrase + formatTens(decimals)  ;
-            formattedHundred = formatTens(hundreds) + " " + magnitudes.get(100) + formattedDecimals;
+            formattedNumber = formatTens(hundreds) + " " + magnitudes.get(100) + formattedDecimals;
         }
-        return formattedHundred;
+        return formattedNumber;
     }
 
     /**
@@ -140,10 +140,10 @@ public class IntFormatter {
      * @param thousandsToTransform
      * @return
      */
-    private String formatThousands(int thousandsToTransform) {
-        String formattedThousands;
+    private String formatThousands(int thousandsToTransform, boolean shouldAppendAnd) {
+        String formattedNumber;
         if (thousandsToTransform < 1000) {
-            formattedThousands = formatHundreds(thousandsToTransform, true);
+            formattedNumber = formatHundreds(thousandsToTransform, thousandsToTransform > 99 || shouldAppendAnd);
         } else {
             int hundreds = thousandsToTransform % 1000;
             int thousands = (thousandsToTransform - hundreds) / 1000;
@@ -152,13 +152,36 @@ public class IntFormatter {
                 formattedHundreds = ""; //stop processing if round thousand
             } else {
                 //Adds " and " when you have thousands, zeros and tens. E.g. 13.001, 450.025, 950.090
-                String hundredsSeparator = hundreds < 100 ? " and " : " ";
-                formattedHundreds = hundredsSeparator + formatHundreds(hundreds, true);
+                formattedHundreds = " " + formatHundreds(hundreds, true);
             }
-            formattedThousands = formatHundreds(thousands, false)
+            formattedNumber = formatHundreds(thousands, false)
                     + " " + magnitudes.get(1000) + formattedHundreds;
         }
-        return formattedThousands;
+        return formattedNumber;
+    }
+
+    /**
+     * Formats numbers up to 999.999.999
+     * @param numberToTransform
+     * @return
+     */
+    private String formatMillions(int numberToTransform) {
+        String formattedNumber;
+        if (numberToTransform < 1000000) {
+            formattedNumber = formatThousands(numberToTransform, false);
+        } else {
+            int thousands = numberToTransform % 1000000;
+            int millions = (numberToTransform - thousands) / 1000000;
+            String formattedThousands;
+            if (thousands == 0) {
+                formattedThousands = "";
+            } else {
+                formattedThousands = " " + formatThousands(thousands, true);
+            }
+            formattedNumber = formatHundreds(millions, false) + " " + magnitudes.get(1000000)
+                     + formattedThousands;
+        }
+        return formattedNumber;
     }
 
     /**
