@@ -3,7 +3,6 @@ package com.metaute.api.main;
 import com.metaute.api.lib.IntFormatter;
 
 import java.nio.charset.StandardCharsets;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -27,6 +26,17 @@ public class Main {
         return result;
     }
 
+    /**
+     * Makes the best effort to convert the user's input to an integer
+     * @param userInput
+     * @return
+     */
+    private static int getIntFromUserInput(String userInput) throws NumberFormatException {
+        String sanitizedInput = sanitizeInputString(userInput);
+        int result = Integer.parseInt(sanitizedInput);
+        return result;
+    }
+
 
 
     public static void main(String[] args) {
@@ -36,11 +46,9 @@ public class Main {
         IntFormatter formatter = new IntFormatter();
         while(true) {
             System.out.println("Enter the number you wish to convert.");
-
             try {
                 Scanner input = new Scanner(System.in, StandardCharsets.UTF_8.name());
-                String line = input.next();
-                int intToTransform = Integer.parseInt(sanitizeInputString(line));
+                int intToTransform = getIntFromUserInput(input.next());
                 String formattedInt = formatter.format(intToTransform);
                 System.out.println(formattedInt);
             } catch (NumberFormatException e) {
