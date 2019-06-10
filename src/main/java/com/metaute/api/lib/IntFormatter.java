@@ -1,6 +1,5 @@
 package com.metaute.api.lib;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +8,13 @@ import java.util.Map;
  */
 public class IntFormatter {
 
-    Map<Integer, String> units;
-    Map<Integer, String> roundTens;
-    Map<Integer, String> magnitudes;
+    private Map<Integer, String> units;
+    private Map<Integer, String> roundTens;
+    private Map<Integer, String> magnitudes;
+
+    private static final String MIN_INT_REPRESENTATION =
+            "Negative two billion one hundred forty seven million " +
+                    "four hundred eighty three thousand six hundred and forty eight";
 
     public IntFormatter() {
         initializeUnits();
@@ -71,15 +74,14 @@ public class IntFormatter {
     public String format(int toTransform) {
         String formattedNumber;
         String signString = "";
+        if (toTransform == Integer.MIN_VALUE) {
+            return MIN_INT_REPRESENTATION;
+        }
         if (toTransform < 0) {
-            signString = "minus ";
+            signString = "negative ";
             toTransform = toTransform * -1;
         }
-        if (toTransform < 1000000000) {
-            formattedNumber = formatMillions(toTransform);
-        } else {
-            formattedNumber = "???";
-        }
+        formattedNumber = formatBillions(toTransform);
         return capitalizeNumber(signString + formattedNumber);
     }
 
@@ -185,17 +187,29 @@ public class IntFormatter {
     }
 
     /**
-     * Divides up the number into its components
-     * @param number
+     * Method capable of transforming numbers up to the max value of integer
+     * @param numberToTransform
      * @return
      */
-    private static ArrayList<Integer> getNumberPlacements(int number) {
-        ArrayList<Integer> numbers = new ArrayList<>();
-        while(number > 0) {
-            int unit = number % 10;
-            number = (number - unit)/10;
-            numbers.add(unit);
+    private String formatBillions(int numberToTransform) {
+        String formattedNumber;
+        if (numberToTransform < 1000000000) {
+            formattedNumber = formatMillions(numberToTransform);
+        } else {
+            int millions = numberToTransform % 1000000000;
+            int billions = (numberToTransform - millions) / 1000000000;
+            String formattedMillions;
+            if (millions == 0) {
+                formattedMillions = "";
+            } else {
+                formattedMillions = " " + formatMillions(millions);
+            }
+            formattedNumber = formatHundreds(billions, false) + " " + magnitudes.get(1000000000)
+                    + formattedMillions;
+
         }
-        return numbers;
+        return formattedNumber;
     }
+
+
 }

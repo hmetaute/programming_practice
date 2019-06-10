@@ -19,12 +19,15 @@ public class Main {
         System.out.println("Welcome to the integer formatter! You can convert Integers to Strings in english");
         System.out.println("In order to stop the program, press CTRL + C.");
         System.out.println(Integer.MAX_VALUE);
+        System.out.println(Integer.MIN_VALUE);
+
         IntFormatter formatter = new IntFormatter();
         while(true) {
             System.out.println("Enter the number you wish to convert.");
+            System.out.println("");
             try {
-                int max = 999999999;
-                int min = 999999;
+                int min = 1000000000;
+                int max = Integer.MAX_VALUE;
                 for(int i = 0; i < 100; i++) {
                     Random random = new Random();
                     int number = random.nextInt(max + 1 -min) + min;

@@ -92,8 +92,15 @@ public class IntFormatterTest {
     }
 
     @Test
+    public void testSignedBillions() {
+        String resourceFileLocation = "test-data/signedBillions.csv";
+        testResourceFileLoads(resourceFileLocation);
+        testCasesFromResourceFile(resourceFileLocation);
+    }
+
+    @Test
     public void testNumber() {
-        testNumber(-900000001,"Minus nine hundred million and one");
+        testNumber(-900000001,"Negative nine hundred million and one");
     }
 
 }
