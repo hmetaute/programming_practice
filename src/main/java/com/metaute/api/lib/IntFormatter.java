@@ -118,18 +118,18 @@ public class IntFormatter {
 
     /**
      * This method is capable of formatting numbers up to 999
-     * @param hundredsToTransform
-     * @param finalDigits Signals whether or not this method is called for the last three numbers of the int
+     * @param numberToTransform
+     * @param shouldAppendAnd Signals whether or not this method is called for the last three numbers of the int
      * @return formatted signed number
      */
-    private String formatHundreds(int hundredsToTransform, boolean finalDigits) {
+    private String formatHundreds(int numberToTransform, boolean shouldAppendAnd) {
         String formattedNumber;
-        if (hundredsToTransform < 100) {
-            formattedNumber = finalDigits ? "and " + formatTens(hundredsToTransform) : formatTens(hundredsToTransform);
+        if (numberToTransform < 100) {
+            formattedNumber = shouldAppendAnd ? "and " + formatTens(numberToTransform) : formatTens(numberToTransform);
         } else {
-            String concatPhrase = finalDigits ? " and " : " ";
-            int decimals = hundredsToTransform % 100;
-            int hundreds = (hundredsToTransform - decimals) / 100;
+            String concatPhrase = shouldAppendAnd ? " and " : " ";
+            int decimals = numberToTransform % 100;
+            int hundreds = (numberToTransform - decimals) / 100;
             //We need to account for the case of round numbers. We get "one hundred and zero".
             String formattedDecimals = decimals == 0 ? "" : concatPhrase + formatTens(decimals)  ;
             formattedNumber = formatTens(hundreds) + " " + magnitudes.get(100) + formattedDecimals;
@@ -139,16 +139,16 @@ public class IntFormatter {
 
     /**
      * Method capable of transforming numbers up to a 999.999
-     * @param thousandsToTransform
+     * @param numberToTransform
      * @return
      */
-    private String formatThousands(int thousandsToTransform, boolean shouldAppendAnd) {
+    private String formatThousands(int numberToTransform, boolean shouldAppendAnd) {
         String formattedNumber;
-        if (thousandsToTransform < 1000) {
-            formattedNumber = formatHundreds(thousandsToTransform, thousandsToTransform > 99 || shouldAppendAnd);
+        if (numberToTransform < 1000) {
+            formattedNumber = formatHundreds(numberToTransform, numberToTransform > 99 || shouldAppendAnd);
         } else {
-            int hundreds = thousandsToTransform % 1000;
-            int thousands = (thousandsToTransform - hundreds) / 1000;
+            int hundreds = numberToTransform % 1000;
+            int thousands = (numberToTransform - hundreds) / 1000;
             String formattedHundreds;
             if (hundreds == 0) {
                 formattedHundreds = ""; //stop processing if round thousand
