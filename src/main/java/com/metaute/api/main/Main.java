@@ -18,7 +18,7 @@ public class Main {
      * @param input
      * @return
      */
-    private static String sanitizeInputString(String input) {
+    public static String sanitizeInputString(String input) {
         String result = input;
         for (int i = 0; i < specialCharactersToIgnore.length; i++) {
             result = result.replace(specialCharactersToIgnore[i], "");
@@ -31,7 +31,7 @@ public class Main {
      * @param userInput
      * @return
      */
-    private static int getIntFromUserInput(String userInput) throws NumberFormatException {
+    public static int getIntFromUserInput(String userInput) throws NumberFormatException {
         String sanitizedInput = sanitizeInputString(userInput);
         int result = Integer.parseInt(sanitizedInput);
         return result;
