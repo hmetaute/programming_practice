@@ -16,7 +16,7 @@ public class IntFormatter {
     private List<Integer> magnitudeOrder;
 
     private static final String MIN_INT_REPRESENTATION =
-            "Negative two billion one hundred forty seven million " +
+            "Minus two billion one hundred forty seven million " +
                     "four hundred eighty three thousand six hundred and forty eight";
 
     public IntFormatter() {
@@ -143,7 +143,7 @@ public class IntFormatter {
             return MIN_INT_REPRESENTATION;
         }
         if (toFormat < 0) {
-            signString = "negative ";
+            signString = "minus ";
             toFormat = toFormat * -1;
         }
         /**
