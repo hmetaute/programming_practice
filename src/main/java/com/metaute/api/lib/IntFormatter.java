@@ -1,6 +1,8 @@
 package com.metaute.api.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,6 +13,7 @@ public class IntFormatter {
     private Map<Integer, String> units;
     private Map<Integer, String> roundTens;
     private Map<Integer, String> magnitudes;
+    private List<Integer> magnitudeOrder;
 
     private static final String MIN_INT_REPRESENTATION =
             "Negative two billion one hundred forty seven million " +
@@ -20,6 +23,12 @@ public class IntFormatter {
         initializeUnits();
         initializeRoundTens();
         initializeMagnitudes();
+        magnitudeOrder = new ArrayList<>();
+        magnitudeOrder.add(1000000000);
+        magnitudeOrder.add(1000000);
+        magnitudeOrder.add(1000);
+        magnitudeOrder.add(100);
+        magnitudeOrder.add(10);
     }
 
     private void initializeUnits() {
@@ -67,25 +76,6 @@ public class IntFormatter {
     }
 
     /**
-     * Takes in a number and returns its
-     * @param toTransform the number you want to be transformed to an english string
-     * @return
-     */
-    public String format(int toTransform) {
-        String formattedNumber;
-        String signString = "";
-        if (toTransform == Integer.MIN_VALUE) {
-            return MIN_INT_REPRESENTATION;
-        }
-        if (toTransform < 0) {
-            signString = "negative ";
-            toTransform = toTransform * -1;
-        }
-        formattedNumber = formatBillions(toTransform);
-        return capitalizeNumber(signString + formattedNumber);
-    }
-
-    /**
      * Capitalizes the formatted String representations
      * @param formattedNumber
      * @return
@@ -117,98 +107,63 @@ public class IntFormatter {
     }
 
     /**
-     * This method is capable of formatting numbers up to 999
-     * @param numberToTransform
-     * @param shouldAppendAnd Signals whether or not this method is called for the last three numbers of the int
-     * @return formatted signed number
+     * Relies on recursion in order to divide and format any valid int
+     * @param toFormat a number between MIN_INT+1 and MAX_INT
+     * @param magnitude one of the elements in magnitudeOrder. It's the numeric representation of what qualifier the number has
+     * @return the formatted number in english
      */
-    private String formatHundreds(int numberToTransform, boolean shouldAppendAnd) {
-        String formattedNumber;
-        if (numberToTransform < 100) {
-            formattedNumber = shouldAppendAnd ? "and " + formatTens(numberToTransform) : formatTens(numberToTransform);
-        } else {
-            String concatPhrase = shouldAppendAnd ? " and " : " ";
-            int decimals = numberToTransform % 100;
-            int hundreds = (numberToTransform - decimals) / 100;
-            //We need to account for the case of round numbers. We get "one hundred and zero".
-            String formattedDecimals = decimals == 0 ? "" : concatPhrase + formatTens(decimals)  ;
-            formattedNumber = formatTens(hundreds) + " " + magnitudes.get(100) + formattedDecimals;
+    public String recursiveFormat(int toFormat, int magnitude) {
+        if (toFormat < 100) {
+            String formattedBaseCase = formatTens(toFormat);
+            return formattedBaseCase;
         }
-        return formattedNumber;
+        int nextMagnitudeIndex = magnitudeOrder.indexOf(magnitude) + 1;
+        Integer nextMagnitude = magnitudeOrder.get(nextMagnitudeIndex);
+        if (toFormat < magnitude) {
+            return recursiveFormat(toFormat, nextMagnitude);
+        } else {
+            //We split the number to the left and right of the magnitude.
+            //e.g. magnitude is 1000 and toFormat is 1003 then left = 1000 and right = 3
+            int right = toFormat % magnitude;
+            int left = (toFormat - right) / magnitude;
+            String formattedLeftWithMagnitude =
+                    String.format("%s %s", recursiveFormat(left, nextMagnitude), magnitudes.get(magnitude));
+            if (right == 0) {
+                return formattedLeftWithMagnitude;
+            } else {
+                String formattedRight = recursiveFormat(right, magnitudeOrder.get(0));
+                return String.format("%s %s", formattedLeftWithMagnitude, formattedRight);
+            }
+        }
     }
 
-    /**
-     * Method capable of transforming numbers up to a 999.999
-     * @param numberToTransform
-     * @return
-     */
-    private String formatThousands(int numberToTransform, boolean shouldAppendAnd) {
-        String formattedNumber;
-        if (numberToTransform < 1000) {
-            formattedNumber = formatHundreds(numberToTransform, numberToTransform > 99 || shouldAppendAnd);
-        } else {
-            int hundreds = numberToTransform % 1000;
-            int thousands = (numberToTransform - hundreds) / 1000;
-            String formattedHundreds;
-            if (hundreds == 0) {
-                formattedHundreds = ""; //stop processing if round thousand
-            } else {
-                //Adds " and " when you have thousands, zeros and tens. E.g. 13.001, 450.025, 950.090
-                formattedHundreds = " " + formatHundreds(hundreds, true);
-            }
-            formattedNumber = formatHundreds(thousands, false)
-                    + " " + magnitudes.get(1000) + formattedHundreds;
+    public String format(int toFormat) {
+        String signString = "";
+        if (toFormat == Integer.MIN_VALUE) {
+            return MIN_INT_REPRESENTATION;
         }
-        return formattedNumber;
-    }
-
-    /**
-     * Formats numbers up to 999.999.999
-     * @param numberToTransform
-     * @return
-     */
-    private String formatMillions(int numberToTransform) {
-        String formattedNumber;
-        if (numberToTransform < 1000000) {
-            formattedNumber = formatThousands(numberToTransform, false);
-        } else {
-            int thousands = numberToTransform % 1000000;
-            int millions = (numberToTransform - thousands) / 1000000;
-            String formattedThousands;
-            if (thousands == 0) {
-                formattedThousands = "";
-            } else {
-                formattedThousands = " " + formatThousands(thousands, true);
-            }
-            formattedNumber = formatHundreds(millions, false) + " " + magnitudes.get(1000000)
-                     + formattedThousands;
+        if (toFormat < 0) {
+            signString = "negative ";
+            toFormat = toFormat * -1;
         }
-        return formattedNumber;
-    }
-
-    /**
-     * Method capable of transforming numbers up to the max value of integer
-     * @param numberToTransform
-     * @return
-     */
-    private String formatBillions(int numberToTransform) {
-        String formattedNumber;
-        if (numberToTransform < 1000000000) {
-            formattedNumber = formatMillions(numberToTransform);
-        } else {
-            int millions = numberToTransform % 1000000000;
-            int billions = (numberToTransform - millions) / 1000000000;
-            String formattedMillions;
-            if (millions == 0) {
-                formattedMillions = "";
+        /**
+         * Handles the special case of adding " and " between hundreds and tens only in the last position.
+         * e.g. 234,501,723: Two hundred thirty four million five hundred one thousand seven hundred and twenty three.
+         */
+        if (toFormat > 100) {
+            int right = toFormat % 100;
+            int left = (toFormat - right);
+            String formattedLeft = recursiveFormat(left, magnitudeOrder.get(0));
+            if (right == 0) {
+                return capitalizeNumber(signString + formattedLeft);
             } else {
-                formattedMillions = " " + formatMillions(millions);
+                String formattedNumber = String.format("%s and %s", formattedLeft, formatTens(right));
+                return capitalizeNumber(signString + formattedNumber);
             }
-            formattedNumber = formatHundreds(billions, false) + " " + magnitudes.get(1000000000)
-                    + formattedMillions;
-
         }
-        return formattedNumber;
+        String plainFormattedNumber = signString +
+                recursiveFormat(toFormat, magnitudeOrder.get(0));
+        return capitalizeNumber(plainFormattedNumber);
     }
 
 

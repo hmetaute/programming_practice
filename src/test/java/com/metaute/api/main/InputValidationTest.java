@@ -27,4 +27,11 @@ public class InputValidationTest {
         String input = "234,501,723";
         assertEquals(234501723, Main.getIntFromUserInput(input));
     }
+
+
+    @Test
+    public void applicationParsesNumberWithLeftZeros() {
+        String input = "0000234,501,723";
+        assertEquals(234501723, Main.getIntFromUserInput(input));
+    }
 }

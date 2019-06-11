@@ -99,8 +99,19 @@ public class IntFormatterTest {
     }
 
     @Test
-    public void testNumber() {
-        testNumber(-900000001,"Negative nine hundred million and one");
+    public void testThousands() {
+        IntFormatter converter = new IntFormatter();
+        String converted = converter.format(987654);
+        assertEquals("Nine hundred eighty seven thousand six hundred and fifty four", converted);
     }
+
+    @Test
+    public void testHundredsOfThousands() {
+        IntFormatter converter = new IntFormatter();
+        String converted = converter.format(300001);
+        assertEquals("Three hundred thousand and one", converted);
+    }
+
+
 
 }
